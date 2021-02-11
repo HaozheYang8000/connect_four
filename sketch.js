@@ -188,7 +188,7 @@ function check_win2(boardInLocalScope) {
 }
 
 function mousePressed() {
-  if (gameState !== "play") return false;
+  if (gameState !== "play") return;
   let moved = false;
   for (let i = 30; i <= 730; i+=100) {
     if (mouseX > i+20 && mouseX < i+80 && mouseY > 30 && mouseY < 630) {
@@ -419,133 +419,60 @@ function computer_ai_move() {
   check_win();
 }
 
-///////////////////////////////////// BELOW CODE is for calculating the score  //////////////////////////////
-/////////////////////////// DO NOT TOUCH UNLESS YOU ABSOLUTLY KNOW WHAT YOU ARE DOING  //////////////////////
+///////////////////////////////////// BELOW CODE IS FOR CALCULATING SCORES  //////////////////////////////
 
 function score(boardInLocalScope) {
-  let overallPoints = 0;
-  let verticalPoints = 0;
-  let horizontalPoints = 0;
-  let diagonalPoints1 = 0;
-  let diagonalPoints2 = 0;
+    let overallPoints = 0;
+    let verticalPoints = 0;
+    let horizontalPoints = 0;
+    let diagonalPoints1 = 0;    // top left bottom right
+    let diagonalPoints2 = 0;    // top right bottom left
 
-  // Board-size: 7x6 (height x width)
-  // Array indices begin with 0
-  // => e.g. height: 0, 1, 2, 3, 4, 5
-
-  // Vertical points
-  // Check each column for vertical score
-  // 
-  // Possible situations
-  //  0  1  2  3  4  5  6
-  // [x][ ][ ][ ][ ][ ][ ] 0
-  // [x][x][ ][ ][ ][ ][ ] 1
-  // [x][x][x][ ][ ][ ][ ] 2
-  // [x][x][x][ ][ ][ ][ ] 3
-  // [ ][x][x][ ][ ][ ][ ] 4
-  // [ ][ ][x][ ][ ][ ][ ] 5
-  for (let row = 0; row < 3; row++) {
-    for (let column = 0; column < 7; column++) {
-      ////// unchanged
-      let score = score_position(boardInLocalScope, row, column, 1, 0);
-      if (score === 100000) return 100000; // computer win
-      if (score === -100000) return -100000; // player win
-      verticalPoints += score;
-    }
-  }
-
-  // Horizontal points
-  // Check each row's score
-  // 
-  // Possible situations
-  //  0  1  2  3  4  5  6
-  // [x][x][x][x][ ][ ][ ] 0
-  // [ ][x][x][x][x][ ][ ] 1
-  // [ ][ ][x][x][x][x][ ] 2
-  // [ ][ ][ ][x][x][x][x] 3
-  // [ ][ ][ ][ ][ ][ ][ ] 4
-  // [ ][ ][ ][ ][ ][ ][ ] 5
-  for (let row = 0; row < 6; row++) {
-    for (let column = 0; column < 4; column++) {
-      ////// unchanged
-      let score = score_position(boardInLocalScope, row, column, 0, 1);   
-      if (score === 100000) return 100000; // computer win
-      if (score === -100000) return -100000; // player win
-      horizontalPoints += score;
-    }
-  }
-
-  // Diagonal points 1 (left-bottom)
-  //
-  // Possible situation
-  //  0  1  2  3  4  5  6
-  // [x][ ][ ][ ][ ][ ][ ] 0
-  // [ ][x][ ][ ][ ][ ][ ] 1
-  // [ ][ ][x][ ][ ][ ][ ] 2
-  // [ ][ ][ ][x][ ][ ][ ] 3
-  // [ ][ ][ ][ ][ ][ ][ ] 4
-  // [ ][ ][ ][ ][ ][ ][ ] 5
-  for (let row = 0; row < 3; row++) {
-    for (let column = 0; column < 4; column++) {
-      ////// unchanged
-      let score = score_position(boardInLocalScope, row, column, 1, 1);
-      if (score === 100000) return 100000; // computer win
-      if (score === -100000) return -100000; // player win
-      diagonalPoints1 += score;
-    }
-  }
-
-  // Diagonal points 2 (right-bottom)
-  //
-  // Possible situation
-  //  0  1  2  3  4  5  6
-  // [ ][ ][ ][x][ ][ ][ ] 0
-  // [ ][ ][x][ ][ ][ ][ ] 1
-  // [ ][x][ ][ ][ ][ ][ ] 2
-  // [x][ ][ ][ ][ ][ ][ ] 3
-  // [ ][ ][ ][ ][ ][ ][ ] 4
-  // [ ][ ][ ][ ][ ][ ][ ] 5
-  for (let row = 3; row < 3; row++) {
-    for (let column = 0; column < 4; column++) {
-      ////// unchanged
-      let score = score_position(boardInLocalScope, row, column, -1, +1);
-      if (score === 100000) return 100000; // computer win
-      if (score === -100000) return -100000; // player win
-      diagonalPoints2 += score;
+    for (let col = 0; col < 7; col++) {
+        verticalPoints += findScoreInOneLine(boardInLocalScope, col, 0, 0, 1);
     }
 
-  }
+    for (let row = 0; row < 6; row++) {
+        horizontalPoints += findScoreInOneLine(boardInLocalScope, 0, row, 1, 0);
+    }
 
-  overallPoints = horizontalPoints + verticalPoints + diagonalPoints1 + diagonalPoints2;
-  return overallPoints;
+    for (let row = 0; row < 6; row++) {
+        diagonalPoints1 += findScoreInOneLine(boardInLocalScope, 0, row, 1, 1);
+    } for (let col = 0; col < 7; col++) {
+        diagonalPoints1 += findScoreInOneLine(boardInLocalScope, col, 0, 1, 1);
+    }
+
+    for (let row = 0; row < 6; row++) {
+        diagonalPoints2 += findScoreInOneLine(boardInLocalScope, 6, row, -1, 1);
+    } for (let col = 0; col < 7; col++) {
+        diagonalPoints2 += findScoreInOneLine(boardInLocalScope, col, 0, -1, 1);
+    }
+
+    overallPoints = verticalPoints + horizontalPoints + diagonalPoints1 + diagonalPoints2;
+    return overallPoints;
 }
 
-function score_position (boardInLocalScope, row, column, dy, dx) {
-  let humanPoints = 1;
-  let computerPoints = 1;
+function findScoreInOneLine(boardInLocalScope, col, row, dcol, drow) {
+    let connectedNumber = 0;
+    let connectedColor = 0;
 
-  // Determine score through amount of available chips
-  for (let i = 0; i < 4; i++) {
-    if (boardInLocalScope[row][column] === 0) {
-      humanPoints *= 10; // Add for each human chip
-    } else if (boardInLocalScope[row][column] === 1) {
-      computerPoints *= 10; // Add for each computer chip
+    let humanPoints = 0;
+    let computerPoints = 0;
+
+    while (col >= 0 && col <= 6 && row >= 0 && row <= 5) {
+        if (boardInLocalScope[row][col] === connectedColor) connectedNumber++;
+        else {
+            if (connectedColor === 1) humanPoints += Math.pow(10, connectedNumber);
+            if (connectedColor === 2) computerPoints += Math.pow(10, connectedNumber);
+            connectedNumber =  1;
+            connectedColor = boardInLocalScope[row][col];
+        }
+
+        row += drow;
+        col += dcol;
     }
+    if (connectedColor === 1) humanPoints += Math.pow(10, connectedNumber);
+    if (connectedColor === 2) computerPoints += Math.pow(10, connectedNumber);
 
-    // Moving through our board
-    row += dy;
-    column += dx;
-  }
-
-  // Marking winning/returning score
-  if (humanPoints === 4) {
-    // Computer won (100000)
-    return 100000;
-  } else if (computerPoints === 4) {
-    // Human won (-100000)
-    return -100000;
-  } else {
-    // Return normal points
     return computerPoints-humanPoints;
-  }
 }
