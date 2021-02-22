@@ -1,17 +1,11 @@
-// let board = [[0, 0, 0, 0, 0, 0, 0],
-//              [0, 0, 0, 0, 0, 0, 0],
-//              [0, 0, 0, 0, 0, 0, 0],
-//              [0, 0, 0, 0, 0, 0, 0],
-//              [0, 0, 0, 0, 0, 0, 0],
-//              [0, 0, 0, 0, 0, 0, 0],
-//             ];
-
 let board = [[0, 0, 0, 0, 0, 0, 0],
              [0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 2, 0, 0, 0],
-             [0, 0, 0, 1, 0, 0, 0],
-             [0, 2, 1, 1, 1, 0, 0],
-             [0, 2, 2, 1, 2, 0, 0]]
+             [0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0],
+            ];
+let DEPTH = 6;
 let wonPosition = [[], [], [], []];
 let gameState = "play";
 let counter = 0;
@@ -378,7 +372,6 @@ function computer_ai_move() {
   // the real computer AI
   // search depth of DEPTH
   console.log("computer is thinking:\n");
-  let DEPTH = 6;
   let tmpboard = [[], [], [], [], [], []];
   let v = [], w = [];
   allMove(board, v);
@@ -405,6 +398,13 @@ function computer_ai_move() {
   }
 
   let SZ = w.length;
+  if (SZ === 7) {
+    if (DEPTH === 4) DEPTH = 2;
+    if (DEPTH === 6) DEPTH = 4;
+    computer_ai_move();
+    DEPTH = 6;
+    return;
+  }
   let col = w[Math.floor(Math.random()*SZ)];
   // move piece
   for (let j = 5; j >= 0; j--) {
