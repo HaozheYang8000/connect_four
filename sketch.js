@@ -150,7 +150,6 @@ function check_win2(boardInLocalScope) {
     for (let j = 0; j < 4; j++) {
       if (boardInLocalScope[i][j] === boardInLocalScope[i][j+1] && boardInLocalScope[i][j+1] === boardInLocalScope[i][j+2]
         && boardInLocalScope[i][j+2] === boardInLocalScope[i][j+3] && boardInLocalScope[i][j] !== 0) {
-          wonPosition = [[i, j], [i, j+1], [i, j+2], [i, j+3]];
           return true;
       }
     }
@@ -161,7 +160,6 @@ function check_win2(boardInLocalScope) {
     for (let j = 0; j < 7; j++) {
       if (boardInLocalScope[i][j] === boardInLocalScope[i+1][j] && boardInLocalScope[i+1][j] === boardInLocalScope[i+2][j]
         && boardInLocalScope[i+2][j] === boardInLocalScope[i+3][j] && boardInLocalScope[i][j] !== 0) {
-          wonPosition = [[i, j], [i+1, j], [i+2, j], [i+3, j]];
           return true;
       }
     }
@@ -173,13 +171,11 @@ function check_win2(boardInLocalScope) {
       // top-left to bottom-right
       if (boardInLocalScope[i][j] === boardInLocalScope[i+1][j+1] && boardInLocalScope[i+1][j+1] === boardInLocalScope[i+2][j+2]
         && boardInLocalScope[i+2][j+2] === boardInLocalScope[i+3][j+3] && boardInLocalScope[i][j] !== 0) {
-          wonPosition = [[i, j], [i+1, j+1], [i+2, j+2], [i+3, j+3]];
           return true;
       }
       // top-right to bottom-left
       if (boardInLocalScope[i][j] === boardInLocalScope[i+1][j-1] && boardInLocalScope[i+1][j-1] === boardInLocalScope[i+2][j-2]
         && boardInLocalScope[i+2][j-2] === boardInLocalScope[i+3][j-3] && boardInLocalScope[i][j] !== 0) {
-          wonPosition = [[i, j], [i+1, j-1], [i+2, j-2], [i+3, j-3]];
           return true;
       }
     }
@@ -261,9 +257,8 @@ function allMove(tmpboard, v)
 
 function one_max(boardInLocalScope, currentMinscore) {
   let tmpboard = [[], [], [], [], [], []];
-  for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(boardInLocalScope[i][j]);
   let v = [];
-  allMove(tmpboard, v);
+  allMove(boardInLocalScope, v);
 
   let maxscore = -100000;
   for (let i of v) {
@@ -288,9 +283,8 @@ function one_max(boardInLocalScope, currentMinscore) {
 
 function one_min(boardInLocalScope, currentMaxscore) {
   let tmpboard = [[], [], [], [], [], []];
-  for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(boardInLocalScope[i][j]);
   let v = [];
-  allMove(tmpboard, v);
+  allMove(boardInLocalScope, v);
 
   let minscore = 100000;
   for (let i of v) {
@@ -306,7 +300,7 @@ function one_min(boardInLocalScope, currentMaxscore) {
     let sc = score(tmpboard);
     if (check_win2(tmpboard)) sc = -100000;
     minscore = Math.min(minscore, sc);
-    if (minscore < currentMaxscore) return 1;
+    if (minscore < currentMaxscore) return 0.5;
   }
 
   if (v.length !== 0) return minscore;
@@ -315,9 +309,8 @@ function one_min(boardInLocalScope, currentMaxscore) {
 
 function multi_max(boardInLocalScope, currentMinscore, depth) {
   let tmpboard = [[], [], [], [], [], []];
-  for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(boardInLocalScope[i][j]);
   let v = [];
-  allMove(tmpboard, v);
+  allMove(boardInLocalScope, v);
 
   let maxscore = -100000;
   for (let i of v) {
@@ -346,9 +339,8 @@ function multi_max(boardInLocalScope, currentMinscore, depth) {
 
 function multi_min(boardInLocalScope, currentMaxscore, depth) {
   let tmpboard = [[], [], [], [], [], []];
-  for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(boardInLocalScope[i][j]);
   let v = [];
-  allMove(tmpboard, v);
+  allMove(boardInLocalScope, v);
 
   let minscore = 100000;
   for (let i of v) {
@@ -361,7 +353,7 @@ function multi_min(boardInLocalScope, currentMaxscore, depth) {
       }
     }
 
-    let sc = 0; 
+    let sc = 0;
     if (depth === 2) sc = one_max(tmpboard, minscore);
     if (depth > 2) sc = multi_max(tmpboard, minscore, depth-1);
     if (check_win2(tmpboard)) sc = -100000;
@@ -381,10 +373,8 @@ function computer_ai_move() {
   console.log("computer is thinking:\n");
   let DEPTH = 6;
   let tmpboard = [[], [], [], [], [], []];
-  for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(board[i][j]);
-  let v = [];
-  allMove(tmpboard, v);
-  let w = [];
+  let v = [], w = [];
+  allMove(board, v);
 
   let maxscore = -100000;
   for (let i of v) {
