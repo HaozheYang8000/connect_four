@@ -1,10 +1,20 @@
 let board = [[0, 0, 0, 0, 0, 0, 0],
+<<<<<<< HEAD
                          [0, 0, 0, 0, 0, 0, 0],
                          [0, 0, 0, 0, 0, 0, 0],
                          [0, 0, 0, 0, 0, 0, 0],
                          [0, 0, 0, 0, 0, 0, 0],
                          [0, 0, 0, 0, 0, 0, 0],
                         ];
+=======
+             [0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0],
+            ];
+let DEPTH = 6;
+>>>>>>> 61b8a9c04608fec27558ce02b1027719d6c2bcbd
 let wonPosition = [[], [], [], []];
 let gameState = "play";
 let counter = 0;
@@ -145,6 +155,7 @@ function check_win() {
 }
 
 function check_win2(boardInLocalScope) {
+<<<<<<< HEAD
     // horizontal
     for (let i = 0; i < 6; i++) {
         for (let j = 0; j < 4; j++) {
@@ -183,6 +194,41 @@ function check_win2(boardInLocalScope) {
                     return true;
             }
         }
+=======
+  // horizontal
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < 4; j++) {
+      if (boardInLocalScope[i][j] === boardInLocalScope[i][j+1] && boardInLocalScope[i][j+1] === boardInLocalScope[i][j+2]
+        && boardInLocalScope[i][j+2] === boardInLocalScope[i][j+3] && boardInLocalScope[i][j] !== 0) {
+          return true;
+      }
+    }
+  }
+
+  // vertical
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 7; j++) {
+      if (boardInLocalScope[i][j] === boardInLocalScope[i+1][j] && boardInLocalScope[i+1][j] === boardInLocalScope[i+2][j]
+        && boardInLocalScope[i+2][j] === boardInLocalScope[i+3][j] && boardInLocalScope[i][j] !== 0) {
+          return true;
+      }
+    }
+  }
+
+  // diagonal
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 4; j++) {
+      // top-left to bottom-right
+      if (boardInLocalScope[i][j] === boardInLocalScope[i+1][j+1] && boardInLocalScope[i+1][j+1] === boardInLocalScope[i+2][j+2]
+        && boardInLocalScope[i+2][j+2] === boardInLocalScope[i+3][j+3] && boardInLocalScope[i][j] !== 0) {
+          return true;
+      }
+      // top-right to bottom-left
+      if (boardInLocalScope[i][j] === boardInLocalScope[i+1][j-1] && boardInLocalScope[i+1][j-1] === boardInLocalScope[i+2][j-2]
+        && boardInLocalScope[i+2][j-2] === boardInLocalScope[i+3][j-3] && boardInLocalScope[i][j] !== 0) {
+          return true;
+      }
+>>>>>>> 61b8a9c04608fec27558ce02b1027719d6c2bcbd
     }
     return false;
 }
@@ -260,6 +306,7 @@ function allMove(tmpboard, v)
 }
 
 function one_max(boardInLocalScope, currentMinscore) {
+<<<<<<< HEAD
     let tmpboard = [[], [], [], [], [], []];
     for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(boardInLocalScope[i][j]);
     let v = [];
@@ -275,6 +322,22 @@ function one_max(boardInLocalScope, currentMinscore) {
                 break;
             }
         }
+=======
+  let tmpboard = [[], [], [], [], [], []];
+  let v = [];
+  allMove(boardInLocalScope, v);
+
+  let maxscore = -100000;
+  for (let i of v) {
+    tmpboard = [[], [], [], [], [], []];
+    for (let k = 0; k < 6; k++) for (let j = 0; j < 7; j++) tmpboard[k].push(boardInLocalScope[k][j]);
+    for (let j = 5; j >= 0; j--) {
+      if (tmpboard[j][i] === 0) {
+        tmpboard[j][i] = 2;
+        break;
+      }
+    }
+>>>>>>> 61b8a9c04608fec27558ce02b1027719d6c2bcbd
 
         let sc = score(tmpboard);
         if (check_win2(tmpboard)) sc = 100000;
@@ -287,6 +350,7 @@ function one_max(boardInLocalScope, currentMinscore) {
 }
 
 function one_min(boardInLocalScope, currentMaxscore) {
+<<<<<<< HEAD
     let tmpboard = [[], [], [], [], [], []];
     for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(boardInLocalScope[i][j]);
     let v = [];
@@ -308,12 +372,35 @@ function one_min(boardInLocalScope, currentMaxscore) {
         minscore = Math.min(minscore, sc);
         if (minscore < currentMaxscore) return 1;
     }
+=======
+  let tmpboard = [[], [], [], [], [], []];
+  let v = [];
+  allMove(boardInLocalScope, v);
+
+  let minscore = 100000;
+  for (let i of v) {
+    tmpboard = [[], [], [], [], [], []];
+    for (let k = 0; k < 6; k++) for (let j = 0; j < 7; j++) tmpboard[k].push(boardInLocalScope[k][j]);
+    for (let j = 5; j >= 0; j--) {
+      if (tmpboard[j][i] === 0) {
+        tmpboard[j][i] = 1;
+        break;
+      }
+    }
+
+    let sc = score(tmpboard);
+    if (check_win2(tmpboard)) sc = -100000;
+    minscore = Math.min(minscore, sc);
+    if (minscore < currentMaxscore) return 0.5;
+  }
+>>>>>>> 61b8a9c04608fec27558ce02b1027719d6c2bcbd
 
     if (v.length !== 0) return minscore;
     else return 0;
 }
 
 function multi_max(boardInLocalScope, currentMinscore, depth) {
+<<<<<<< HEAD
     let tmpboard = [[], [], [], [], [], []];
     for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(boardInLocalScope[i][j]);
     let v = [];
@@ -338,6 +425,21 @@ function multi_max(boardInLocalScope, currentMinscore, depth) {
         if (sc === 0.5) continue;
         maxscore = sc;
         if (maxscore > currentMinscore) return 0.5;
+=======
+  let tmpboard = [[], [], [], [], [], []];
+  let v = [];
+  allMove(boardInLocalScope, v);
+
+  let maxscore = -100000;
+  for (let i of v) {
+    tmpboard = [[], [], [], [], [], []];
+    for (let k = 0; k < 6; k++) for (let j = 0; j < 7; j++) tmpboard[k].push(boardInLocalScope[k][j]);
+    for (let j = 5; j >= 0; j--) {
+      if (tmpboard[j][i] === 0) {
+        tmpboard[j][i] = 2;
+        break;
+      }
+>>>>>>> 61b8a9c04608fec27558ce02b1027719d6c2bcbd
     }
 
     if (v.length !== 0) return maxscore;
@@ -345,6 +447,7 @@ function multi_max(boardInLocalScope, currentMinscore, depth) {
 }
 
 function multi_min(boardInLocalScope, currentMaxscore, depth) {
+<<<<<<< HEAD
     let tmpboard = [[], [], [], [], [], []];
     for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(boardInLocalScope[i][j]);
     let v = [];
@@ -374,12 +477,39 @@ function multi_min(boardInLocalScope, currentMaxscore, depth) {
         minscore = sc;
         if (minscore < currentMaxscore) return 0.5;
     }
+=======
+  let tmpboard = [[], [], [], [], [], []];
+  let v = [];
+  allMove(boardInLocalScope, v);
+
+  let minscore = 100000;
+  for (let i of v) {
+    tmpboard = [[], [], [], [], [], []];
+    for (let k = 0; k < 6; k++) for (let j = 0; j < 7; j++) tmpboard[k].push(boardInLocalScope[k][j]);
+    for (let j = 5; j >= 0; j--) {
+      if (tmpboard[j][i] === 0) {
+        tmpboard[j][i] = 1;
+        break;
+      }
+    }
+
+    let sc = 0;
+    if (depth === 2) sc = one_max(tmpboard, minscore);
+    if (depth > 2) sc = multi_max(tmpboard, minscore, depth-1);
+    if (check_win2(tmpboard)) sc = -100000;
+
+    if (sc === 0.5) continue;
+    minscore = sc;
+    if (minscore < currentMaxscore) return 0.5;
+  }
+>>>>>>> 61b8a9c04608fec27558ce02b1027719d6c2bcbd
 
     if (v.length !== 0) return minscore;
     else return 0;
 }
 
 function computer_ai_move() {
+<<<<<<< HEAD
     // the real computer AI
     // search depth of DEPTH
     console.log("computer is thinking:\n");
@@ -400,6 +530,25 @@ function computer_ai_move() {
                 break;
             }
         }
+=======
+  // the real computer AI
+  // search depth of DEPTH
+  console.log("computer is thinking:\n");
+  let tmpboard = [[], [], [], [], [], []];
+  let v = [], w = [];
+  allMove(board, v);
+
+  let maxscore = -100000;
+  for (let i of v) {
+    tmpboard = [[], [], [], [], [], []];
+    for (let k = 0; k < 6; k++) for (let j = 0; j < 7; j++) tmpboard[k].push(board[k][j]);
+    for (let j = 5; j >= 0; j--) {
+      if (tmpboard[j][i] === 0) {
+        tmpboard[j][i] = 2;
+        break;
+      }
+    }
+>>>>>>> 61b8a9c04608fec27558ce02b1027719d6c2bcbd
 
         let sc = multi_min(tmpboard, maxscore, DEPTH-1);
         if (check_win2(tmpboard)) sc = 100000;
@@ -410,6 +559,7 @@ function computer_ai_move() {
         }
         w.push(i);
     }
+<<<<<<< HEAD
 
     let SZ = w.length;
     let col = w[Math.floor(Math.random()*SZ)];
@@ -419,6 +569,25 @@ function computer_ai_move() {
             board[j][col] = 2;
             break;
         }
+=======
+    w.push(i);
+  }
+
+  let SZ = w.length;
+  if (SZ === 7) {
+    if (DEPTH === 4) DEPTH = 2;
+    if (DEPTH === 6) DEPTH = 4;
+    computer_ai_move();
+    DEPTH = 6;
+    return;
+  }
+  let col = w[Math.floor(Math.random()*SZ)];
+  // move piece
+  for (let j = 5; j >= 0; j--) {
+    if (board[j][col] === 0) {
+      board[j][col] = 2;
+      break;
+>>>>>>> 61b8a9c04608fec27558ce02b1027719d6c2bcbd
     }
     check_win();
 }
