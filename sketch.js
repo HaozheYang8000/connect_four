@@ -361,11 +361,7 @@ function multi_min(boardInLocalScope, currentMaxscore, depth) {
             }
         }
 
-        let sc = 0; 
-    let sc = 0; 
-        let sc = 0; 
-    let sc = 0; 
-        let sc = 0; 
+        let sc = 0;
         if (depth === 2) sc = one_max(tmpboard, minscore);
         if (depth > 2) sc = multi_max(tmpboard, minscore, depth-1);
         if (check_win2(tmpboard)) sc = -100000;
