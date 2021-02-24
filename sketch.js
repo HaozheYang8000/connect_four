@@ -275,7 +275,8 @@ function draw() {
             if (i.isPlaying()) matchMusicPlaying = true;
         }
         if (!matchMusicPlaying) {
-            random(matchSounds).play();
+            let soundToPlay = random(matchSounds);
+            soundToPlay.play();
         }
     } else if (gameState === "end") {
         display_win_board();
