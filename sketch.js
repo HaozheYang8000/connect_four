@@ -10,9 +10,36 @@ let gameState = "play";
 let counter = 0;
 let winState = -1;
 // user: yellow/1 computer: red/2
+let matchMusicPlaying = false;
+let menuMusicPlaying = false;
+let menuSound = [];
+let matchSounds = [];
+let theme1, theme2;
+let match1, match2, match3;
+let tieSound;
+let winSound;
+let loseSound;
+
+function preload() {
+    tieSound = loadSound("assets/draw.mp3");
+    winSound = loadSound("assets/win.mp3");
+    loseSound = loadSound("assets/defeat.mp3");
+
+    theme1 = loadSound("assets/theme1.mp3");
+    theme2 = loadSound("assets/theme2.mp3");
+
+    match1 = loadSound("assets/match1.mp3");
+    match2 = loadSound("assets/match2.mp3");
+    match3 = loadSound("assets/match3.mp3");
+}
 
 function setup() {
     createCanvas(760, 660);
+    menuSound.push(theme1);
+    menuSound.push(theme2);
+    matchSounds.push(match1);
+    matchSounds.push(match2);
+    matchSounds.push(match3);
 }
 
 function display_board() {
@@ -230,14 +257,26 @@ function computer_move() {
 }
 
 function draw() {
-    if (gameState === "play") {
+    if (gameState === "setup") {
+        text("choose the level of difficulty:");
+
+
+    } if (gameState === "play") {
         display_board();
         mouse_position();
         let boardFull = true;
         for (let i = 0; i < 7; i++) {
-            if (board[0][i] == 0) boardFull = false;
+            if (board[0][i] === 0) boardFull = false;
         }
         if (boardFull) gameState = "tie";
+
+        matchMusicPlaying = false;
+        for (let i of matchSounds) {
+            if (i.isPlaying()) matchMusicPlaying = true;
+        }
+        if (!matchMusicPlaying) {
+            random(matchSounds).play();
+        }
     } else if (gameState === "end") {
         display_win_board();
         if (counter === 240) gameState = "";
