@@ -281,9 +281,19 @@ function draw() {
         }
         if (boardFull) gameState = "tie";
 
+<<<<<<< HEAD
         if (!chosenSong.isPlaying()) {
             chosenSong = random(matchSounds);
             chosenSong.play();
+=======
+        matchMusicPlaying = false;
+        for (let i of matchSounds) {
+            if (i.isPlaying()) matchMusicPlaying = true;
+        }
+        if (!matchMusicPlaying) {
+            let soundToPlay = matchSounds[0];
+            soundToPlay.play();
+>>>>>>> aaafef189460a9225aebecb5b9af30db99b5c48b
         }
     } else if (gameState === "end") {
         display_win_board();
