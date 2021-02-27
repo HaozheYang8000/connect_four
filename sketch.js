@@ -14,10 +14,10 @@ let menuSound = [];
 let matchSounds = [];
 let theme1, theme2;
 let match1, match2, match3;
-let chosenSong;
 let tieSound;
 let winSound;
 let loseSound;
+let chosenSound;
 
 function preload() {
     tieSound = loadSound("assets/draw.mp3");
@@ -234,20 +234,6 @@ function mousePressed() {
     }
 }
 
-function draw_initial_page() {
-    background("blue");
-    textAlign(CENTER, CENTER);
-    text("press any key to continue", width/2, height/2);
-}
-
-function keyPressed() {
-    if (gameState === "setup") {
-        gameState = "play";
-        chosenSong = random(matchSounds);
-        chosenSong.play();
-    }
-}
-
 function computer_move() {
     // // test call computer move
     // for (let i = 6-1; i >= 0; i--) {
@@ -269,10 +255,24 @@ function computer_move() {
     computer_ai_move();
 }
 
+function display_initial_board() {
+    background(0);
+    return;
+}
+
+function keyPressed() {
+    if (gameState === "setup") {
+        gameState = "play";
+        chosenSound = random(matchSounds);
+        chosenSound.play();
+    }
+}
+
 function draw() {
     if (gameState === "setup") {
-        draw_initial_page();
-    } if (gameState === "play") {
+        text("choose the level of difficulty:");
+        display_initial_board();
+    } else if (gameState === "play") {
         display_board();
         mouse_position();
         let boardFull = true;
@@ -281,29 +281,19 @@ function draw() {
         }
         if (boardFull) gameState = "tie";
 
-<<<<<<< HEAD
-        if (!chosenSong.isPlaying()) {
-            chosenSong = random(matchSounds);
-            chosenSong.play();
-=======
-        matchMusicPlaying = false;
-        for (let i of matchSounds) {
-            if (i.isPlaying()) matchMusicPlaying = true;
-        }
-        if (!matchMusicPlaying) {
-            let soundToPlay = matchSounds[0];
-            soundToPlay.play();
->>>>>>> aaafef189460a9225aebecb5b9af30db99b5c48b
+        if (!chosenSound.isPlaying()) {
+            chosenSound = random(matchSounds);
+            chosenSound.play();
         }
     } else if (gameState === "end") {
         display_win_board();
         if (counter === 240) gameState = "";
     } else if (gameState === "tie") {
         none_won();
-        // noLoop();
+        noLoop();
     } else {
         someone_won();
-        // noLoop();
+        noLoop();
     }
 }
 
