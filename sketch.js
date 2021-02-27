@@ -39,6 +39,17 @@ function setup() {
     matchSounds.push(match1);
     matchSounds.push(match2);
     matchSounds.push(match3);
+
+    textAlign(CENTER, CENTER);
+}
+
+////////////////////////// BELOW CODE IS DRAWING /////////////////////////////////////
+
+function display_initial_board() {
+    background("blue");
+    textSize(24);
+    fill("white");
+    text("Press any key to start the connect four game", width/2, height/2);
 }
 
 function display_board() {
@@ -55,6 +66,7 @@ function display_board() {
 }
 
 function display_win_board() {
+    chosenSound.stop();
     if (winState === -1) winState = 0;
     background("blue");
     noStroke();
@@ -82,7 +94,72 @@ function display_win_board() {
     counter++;
     // flash 8 times
     if (counter%15 === 0) winState = Math.abs(1-winState);
-} 
+}
+
+function display_tie_board() {
+    chosenSound.stop();
+    counter++;
+}
+
+function someone_won() {
+    let value = board[wonPosition[0][0]][wonPosition[0][1]];
+    background("blue");
+    fill("white");
+    textSize(24);
+    if (value === 1) {
+        text("Congratulations! You Won!", width/2, height/2);
+        chosenSound = winSound;
+    } else {
+        text("This Algorithm created by Haozhe Yang is too powerful!", width/2, height/2);
+        chosenSound = loseSound;
+    }
+    chosenSound.play();
+}
+
+function none_won() {
+    background("blue");
+    fill("white");
+    textSize(24);
+    text("Oooops. Tie Game!", width/2, height/2);
+
+    chosenSound = tieSound;
+    chosenSound.play();
+}
+
+function draw() {
+    if (gameState === "setup") {
+        text("choose the level of difficulty:");
+        display_initial_board();
+    } else if (gameState === "play") {
+        display_board();
+        mouse_position();
+        let boardFull = true;
+        for (let i = 0; i < 7; i++) {
+            if (board[0][i] === 0) boardFull = false;
+        }
+        if (boardFull) gameState = "tie";
+
+        if (!chosenSound.isPlaying()) {
+            chosenSound = random(matchSounds);
+            chosenSound.play();
+        }
+    } else if (gameState === "end") {
+        display_win_board();
+        if (counter === 240) {
+            someone_won();
+            noLoop();
+        }
+    } else if (gameState === "tie") {
+        display_tie_board();
+        if (counter === 120) {
+            none_won();
+            noloop();
+        }
+    }
+}
+
+/////////////////////////////////// BELOW CODE IS IN GAME FUNCTIONS //////////////////////
+
 
 function mouse_position() {
     for (let i = 30; i <= 730; i+=100) {
@@ -100,27 +177,6 @@ function mouse_position() {
             }
         }
     }
-}
-
-function someone_won() {
-    let value = board[wonPosition[0][0]][wonPosition[0][1]];
-    background("blue");
-    fill("white");
-    textAlign(CENTER);
-    textSize(24);
-    if (value === 1) {
-        text("Congratulations! You Won!", width/2, height/2);
-    } else {
-        text("This Algorithm created by Haozhe Yang is too powerful!", width/2, height/2);
-    }
-}
-
-function none_won() {
-    background("blue");
-    fill("white");
-    textAlign(CENTER);
-    textSize(24);
-    text("Oooops. Tie Game!", width/2, height/2);
 }
 
 function check_win() {
@@ -255,45 +311,11 @@ function computer_move() {
     computer_ai_move();
 }
 
-function display_initial_board() {
-    background(0);
-    return;
-}
-
 function keyPressed() {
     if (gameState === "setup") {
         gameState = "play";
         chosenSound = random(matchSounds);
         chosenSound.play();
-    }
-}
-
-function draw() {
-    if (gameState === "setup") {
-        text("choose the level of difficulty:");
-        display_initial_board();
-    } else if (gameState === "play") {
-        display_board();
-        mouse_position();
-        let boardFull = true;
-        for (let i = 0; i < 7; i++) {
-            if (board[0][i] === 0) boardFull = false;
-        }
-        if (boardFull) gameState = "tie";
-
-        if (!chosenSound.isPlaying()) {
-            chosenSound = random(matchSounds);
-            chosenSound.play();
-        }
-    } else if (gameState === "end") {
-        display_win_board();
-        if (counter === 240) gameState = "";
-    } else if (gameState === "tie") {
-        none_won();
-        noLoop();
-    } else {
-        someone_won();
-        noLoop();
     }
 }
 
