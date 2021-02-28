@@ -9,6 +9,7 @@ let wonPosition = [[], [], [], []];
 let gameState = "setup";
 let counter = 0;
 let winState = -1;
+let DEPTH = 6;
 // user: yellow/1 computer: red/2
 let menuSound = [];
 let matchSounds = [];
@@ -448,7 +449,6 @@ function computer_ai_move() {
     // the real computer AI
     // search depth of DEPTH
     console.log("computer is thinking:\n");
-    let DEPTH = 6;
     let tmpboard = [[], [], [], [], [], []];
     for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(board[i][j]);
     let v = [];
@@ -476,8 +476,8 @@ function computer_ai_move() {
         w.push(i);
     }
 
-    if (w.length === v.length) {
-        if (DEPTH > 3) DEPTH--;
+    if (w.length === v.length && DEPTH > 3) {
+        DEPTH--;
         computer_ai_move();
         DEPTH++;
         return;
