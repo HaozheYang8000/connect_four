@@ -476,6 +476,13 @@ function computer_ai_move() {
         w.push(i);
     }
 
+    if (w.length === v.length) {
+        if (DEPTH > 3) DEPTH--;
+        computer_ai_move();
+        DEPTH++;
+        return;
+    }
+
     let SZ = w.length;
     let col = w[Math.floor(Math.random()*SZ)];
     // move piece
