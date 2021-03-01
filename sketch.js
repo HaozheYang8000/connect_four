@@ -452,7 +452,7 @@ function computerAIMove() {
             break;
         }
     }
-    checkWin();
+    if (checkWin()) gameState = "end";
 }
 
 ///////////////////////////////////// BELOW CODE IS FOR CALCULATING SCORES  //////////////////////////////
