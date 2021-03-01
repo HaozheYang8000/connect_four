@@ -35,7 +35,6 @@ function preload() {
 
 function setup() {
     myCanvas = createCanvas(760, 660);
-    // myCanvas.position(windowWidth/2-380, windowHeight/2-330);
     menuSound.push(theme1);
     menuSound.push(theme2);
     matchSounds.push(match1);
@@ -47,18 +46,14 @@ function setup() {
 
 ////////////////////////// BELOW CODE IS DRAWING /////////////////////////////////////
 
-function display_initial_board() {
+function displayInitialBoard() {
     background("blue");
     textSize(24);
     fill("white");
     text("Press any key to start the connect four game", width/2, height/2);
 }
 
-function display_choose_menu() {
-    text("Choose diffculty of AI: ")
-}
-
-function display_board() {
+function displayBoard() {
     background("blue");
     noStroke();
     for (let i = 0; i < 6; i++) {
@@ -71,7 +66,7 @@ function display_board() {
     }
 }
 
-function display_win_board() {
+function displayWinBoard() {
     chosenSound.stop();
     if (winState === -1) winState = 0;
     background("blue");
@@ -102,12 +97,12 @@ function display_win_board() {
     if (counter%15 === 0) winState = Math.abs(1-winState);
 }
 
-function display_tie_board() {
+function displayTieBoard() {
     chosenSound.stop();
     counter++;
 }
 
-function someone_won() {
+function someoneWon() {
     let value = board[wonPosition[0][0]][wonPosition[0][1]];
     background("blue");
     fill("white");
@@ -122,7 +117,7 @@ function someone_won() {
     chosenSound.play();
 }
 
-function none_won() {
+function noneWon() {
     background("blue");
     fill("white");
     textSize(24);
@@ -135,10 +130,10 @@ function none_won() {
 function draw() {
     if (gameState === "setup") {
         text("choose the level of difficulty:");
-        display_initial_board();
+        displayInitialBoard();
     } else if (gameState === "play") {
-        display_board();
-        mouse_position();
+        displayBoard();
+        mousePosition();
         let boardFull = true;
         for (let i = 0; i < 7; i++) {
             if (board[0][i] === 0) boardFull = false;
@@ -150,15 +145,15 @@ function draw() {
             chosenSound.play();
         }
     } else if (gameState === "end") {
-        display_win_board();
+        displayWinBoard();
         if (counter === 240) {
-            someone_won();
+            someoneWon();
             noLoop();
         }
     } else if (gameState === "tie") {
-        display_tie_board();
+        displayTieBoard();
         if (counter === 120) {
-            none_won();
+            noneWon();
             noloop();
         }
     }
@@ -167,7 +162,8 @@ function draw() {
 /////////////////////////////////// BELOW CODE IS IN GAME FUNCTIONS //////////////////////
 
 
-function mouse_position() {
+function mousePosition() {
+    // put a purple circle around the place that will be yours when you click
     for (let i = 30; i <= 730; i+=100) {
         if (mouseX > i+20 && mouseX < i+80 && mouseY > 30 && mouseY < 630) {
             let circleX = (i-30)/100;
@@ -185,7 +181,7 @@ function mouse_position() {
     }
 }
 
-function check_win() {
+function checkWin() {
     // horizontal
     console.log("checking who is winning\n");
     for (let i = 0; i < 6; i++) {
@@ -193,7 +189,6 @@ function check_win() {
             if (board[i][j] === board[i][j+1] && board[i][j+1] === board[i][j+2]
                 && board[i][j+2] === board[i][j+3] && board[i][j] !== 0) {
                     wonPosition = [[i, j], [i, j+1], [i, j+2], [i, j+3]];
-                    gameState = "end";
                     return true;
             }
         }
@@ -205,7 +200,6 @@ function check_win() {
             if (board[i][j] === board[i+1][j] && board[i+1][j] === board[i+2][j]
                 && board[i+2][j] === board[i+3][j] && board[i][j] !== 0) {
                     wonPosition = [[i, j], [i+1, j], [i+2, j], [i+3, j]];
-                    gameState = "end";
                     return true;
             }
         }
@@ -218,61 +212,16 @@ function check_win() {
             if (board[i][j] === board[i+1][j+1] && board[i+1][j+1] === board[i+2][j+2]
                 && board[i+2][j+2] === board[i+3][j+3] && board[i][j] !== 0) {
                     wonPosition = [[i, j], [i+1, j+1], [i+2, j+2], [i+3, j+3]];
-                    gameState = "end";
                     return true;
             }
             // top-right to bottom-left
             if (board[i][j+3] === board[i+1][j+2] && board[i+1][j+2] === board[i+2][j+1]
                 && board[i+2][j+1] === board[i+3][j] && board[i][j+3] !== 0) {
                     wonPosition = [[i, j+3], [i+1, j+2], [i+2, j+1], [i+3, j]];
-                    gameState = "end";
                     return true;
             }
         }
     }
-}
-
-function check_win2(boardInLocalScope) {
-    // horizontal
-    for (let i = 0; i < 6; i++) {
-        for (let j = 0; j < 4; j++) {
-            if (boardInLocalScope[i][j] === boardInLocalScope[i][j+1] && boardInLocalScope[i][j+1] === boardInLocalScope[i][j+2]
-                && boardInLocalScope[i][j+2] === boardInLocalScope[i][j+3] && boardInLocalScope[i][j] !== 0) {
-                    wonPosition = [[i, j], [i, j+1], [i, j+2], [i, j+3]];
-                    return true;
-            }
-        }
-    }
-
-    // vertical
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 7; j++) {
-            if (boardInLocalScope[i][j] === boardInLocalScope[i+1][j] && boardInLocalScope[i+1][j] === boardInLocalScope[i+2][j]
-                && boardInLocalScope[i+2][j] === boardInLocalScope[i+3][j] && boardInLocalScope[i][j] !== 0) {
-                    wonPosition = [[i, j], [i+1, j], [i+2, j], [i+3, j]];
-                    return true;
-            }
-        }
-    }
-
-    // diagonal
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 4; j++) {
-            // top-left to bottom-right
-            if (boardInLocalScope[i][j] === boardInLocalScope[i+1][j+1] && boardInLocalScope[i+1][j+1] === boardInLocalScope[i+2][j+2]
-                && boardInLocalScope[i+2][j+2] === boardInLocalScope[i+3][j+3] && boardInLocalScope[i][j] !== 0) {
-                    wonPosition = [[i, j], [i+1, j+1], [i+2, j+2], [i+3, j+3]];
-                    return true;
-            }
-            // top-right to bottom-left
-            if (boardInLocalScope[i][j] === boardInLocalScope[i+1][j-1] && boardInLocalScope[i+1][j-1] === boardInLocalScope[i+2][j-2]
-                && boardInLocalScope[i+2][j-2] === boardInLocalScope[i+3][j-3] && boardInLocalScope[i][j] !== 0) {
-                    wonPosition = [[i, j], [i+1, j-1], [i+2, j-2], [i+3, j-3]];
-                    return true;
-            }
-        }
-    }
-    return false;
 }
 
 function mousePressed() {
@@ -292,11 +241,12 @@ function mousePressed() {
         }
     }
     if (moved) {
-        if (!check_win()) computer_move();
+        if (!checkWin()) computerMove();
+        else gameState = "end";
     }
 }
 
-function computer_move() {
+function computerMove() {
     // // test call computer move
     // for (let i = 6-1; i >= 0; i--) {
     //     let moved = false;
@@ -308,13 +258,13 @@ function computer_move() {
     //         }
     //     }
     //     if (moved) {
-    //         check_win();
+    //         checkWin();
     //         break;
     //     }
     // }
 
     // actual ai
-    computer_ai_move();
+    computerAIMove();
 }
 
 function keyPressed() {
@@ -334,7 +284,8 @@ function allMove(tmpboard, v)
     }
 }
 
-function one_max(boardInLocalScope, currentMinscore) {
+function oneMax(boardInLocalScope, currentMinscore) {
+    // at the final calculate, leaf of the search tree
     let tmpboard = [[], [], [], [], [], []];
     for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(boardInLocalScope[i][j]);
     let v = [];
@@ -352,7 +303,7 @@ function one_max(boardInLocalScope, currentMinscore) {
         }
 
         let sc = score(tmpboard);
-        if (check_win2(tmpboard)) sc = 100000;
+        if (checkWin(tmpboard)) sc = 100000;
         maxscore = Math.max(sc, maxscore);
         if (maxscore > currentMinscore) return 0.5;
     }
@@ -361,7 +312,8 @@ function one_max(boardInLocalScope, currentMinscore) {
     else return 0;
 }
 
-function one_min(boardInLocalScope, currentMaxscore) {
+function oneMin(boardInLocalScope, currentMaxscore) {
+    // at the final calculate, leaf of the search tree
     let tmpboard = [[], [], [], [], [], []];
     for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(boardInLocalScope[i][j]);
     let v = [];
@@ -379,7 +331,7 @@ function one_min(boardInLocalScope, currentMaxscore) {
         }
 
         let sc = score(tmpboard);
-        if (check_win2(tmpboard)) sc = -100000;
+        if (checkWin(tmpboard)) sc = -100000;
         minscore = Math.min(minscore, sc);
         if (minscore < currentMaxscore) return 1;
     }
@@ -388,7 +340,8 @@ function one_min(boardInLocalScope, currentMaxscore) {
     else return 0;
 }
 
-function multi_max(boardInLocalScope, currentMinscore, depth) {
+function multiMax(boardInLocalScope, currentMinscore, depth) {
+    // at the middle calculate, find all scores of its children node then find the max score
     let tmpboard = [[], [], [], [], [], []];
     for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(boardInLocalScope[i][j]);
     let v = [];
@@ -406,9 +359,9 @@ function multi_max(boardInLocalScope, currentMinscore, depth) {
         }
 
         let sc = 0;
-        if (depth === 2) sc = one_min(tmpboard, maxscore);
-        if (depth > 2) sc = multi_min(tmpboard, maxscore, depth-1);
-        if (check_win2(tmpboard)) sc = 100000;
+        if (depth === 2) sc = oneMin(tmpboard, maxscore);
+        if (depth > 2) sc = multiMin(tmpboard, maxscore, depth-1);
+        if (checkWin(tmpboard)) sc = 100000;
         
         if (sc === 0.5) continue;
         maxscore = sc;
@@ -419,7 +372,8 @@ function multi_max(boardInLocalScope, currentMinscore, depth) {
     else return 0;
 }
 
-function multi_min(boardInLocalScope, currentMaxscore, depth) {
+function multiMin(boardInLocalScope, currentMaxscore, depth) {
+    // at the middle calculate, find all scores of its children node then find the min score
     let tmpboard = [[], [], [], [], [], []];
     for (let i = 0; i < 6; i++) for (let j = 0; j < 7; j++) tmpboard[i].push(boardInLocalScope[i][j]);
     let v = [];
@@ -437,9 +391,9 @@ function multi_min(boardInLocalScope, currentMaxscore, depth) {
         }
 
         let sc = 0;
-        if (depth === 2) sc = one_max(tmpboard, minscore);
-        if (depth > 2) sc = multi_max(tmpboard, minscore, depth-1);
-        if (check_win2(tmpboard)) sc = -100000;
+        if (depth === 2) sc = oneMax(tmpboard, minscore);
+        if (depth > 2) sc = multiMax(tmpboard, minscore, depth-1);
+        if (checkWin(tmpboard)) sc = -100000;
 
         if (sc === 0.5) continue;
         minscore = sc;
@@ -450,7 +404,7 @@ function multi_min(boardInLocalScope, currentMaxscore, depth) {
     else return 0;
 }
 
-function computer_ai_move() {
+function computerAIMove() {
     // the real computer AI
     // search depth of DEPTH
     console.log("computer is thinking:\n");
@@ -471,8 +425,8 @@ function computer_ai_move() {
             }
         }
 
-        let sc = multi_min(tmpboard, maxscore, DEPTH-1);
-        if (check_win2(tmpboard)) sc = 100000;
+        let sc = multiMin(tmpboard, maxscore, DEPTH-1);
+        if (checkWin(tmpboard)) sc = 100000;
         if (sc === 0.5) continue;
         if (sc !== maxscore) {
             maxscore = sc;
@@ -481,13 +435,15 @@ function computer_ai_move() {
         w.push(i);
     }
 
+    // if all scores are the same then change the depth one less
     if (w.length === v.length && DEPTH > 3) {
         DEPTH--;
-        computer_ai_move();
+        computerAIMove();
         DEPTH++;
         return;
     }
 
+    // return a random move
     let SZ = w.length;
     let col = w[Math.floor(Math.random()*SZ)];
     // move piece
@@ -497,7 +453,7 @@ function computer_ai_move() {
             break;
         }
     }
-    check_win();
+    checkWin();
 }
 
 ///////////////////////////////////// BELOW CODE IS FOR CALCULATING SCORES  //////////////////////////////
