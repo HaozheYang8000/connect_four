@@ -183,7 +183,6 @@ function mousePosition() {
 
 function checkWin() {
     // horizontal
-    console.log("checking who is winning\n");
     for (let i = 0; i < 6; i++) {
         for (let j = 0; j < 4; j++) {
             if (board[i][j] === board[i][j+1] && board[i][j+1] === board[i][j+2]
