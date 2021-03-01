@@ -34,7 +34,8 @@ function preload() {
 }
 
 function setup() {
-    createCanvas(760, 660);
+    myCanvas = createCanvas(760, 660);
+    // myCanvas.position(windowWidth/2-380, windowHeight/2-330);
     menuSound.push(theme1);
     menuSound.push(theme2);
     matchSounds.push(match1);
@@ -51,6 +52,10 @@ function display_initial_board() {
     textSize(24);
     fill("white");
     text("Press any key to start the connect four game", width/2, height/2);
+}
+
+function display_choose_menu() {
+    text("Choose diffculty of AI: ")
 }
 
 function display_board() {
