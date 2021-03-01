@@ -1,3 +1,21 @@
+/* Extra for experts:
+ *  1. Minimax search tree (5 recursive functions -- computerAIMove, multiMin, multiMax, oneMin and oneMax)
+ *     oneMin and oneMax is leaf node
+ *     a function endswith min goes to max to find value up until the leaf
+ *     AI first calls min since player will minimze the value
+ *     Also got to make sure to catch when play or computer can win -- score 100000
+ *  2. Alpha-beta pruning
+ *     if depth+1 is a max then in min if the value if less than max then the overall out come would be less than max, therefore no need to contiinue return function a fake value in my case 0.5
+ *     the same rule apply to if depth+1 is a min then in max if the value if more than min then the overall out would be greater than min
+ *  I code this in c++ first and then translate it
+ * 
+ *  3. choose a random sound to play, and user has to do something for the sound to play
+ *  I finally got sounds working lmao, but I still don't know where the error was. I rewrote my code ans somehow it worked
+ * 
+ * 
+ */
+
+
 let board = [[0, 0, 0, 0, 0, 0, 0],
              [0, 0, 0, 0, 0, 0, 0],
              [0, 0, 0, 0, 0, 0, 0],
@@ -11,9 +29,7 @@ let counter = 0;
 let winState = -1;
 let DEPTH = 6;
 // user: yellow/1 computer: red/2
-let menuSound = [];
 let matchSounds = [];
-let theme1, theme2;
 let match1, match2, match3;
 let tieSound;
 let winSound;
@@ -25,9 +41,6 @@ function preload() {
     winSound = loadSound("assets/win.mp3");
     loseSound = loadSound("assets/defeat.mp3");
 
-    theme1 = loadSound("assets/theme1.mp3");
-    theme2 = loadSound("assets/theme2.mp3");
-
     match1 = loadSound("assets/match1.mp3");
     match2 = loadSound("assets/match2.mp3");
     match3 = loadSound("assets/match3.mp3");
@@ -35,8 +48,6 @@ function preload() {
 
 function setup() {
     myCanvas = createCanvas(760, 660);
-    menuSound.push(theme1);
-    menuSound.push(theme2);
     matchSounds.push(match1);
     matchSounds.push(match2);
     matchSounds.push(match3);
