@@ -1,4 +1,10 @@
-/* Extra for experts:
+/** Stephen Yang
+ *  CS30
+ *  March 1st, 2021
+ *  Connect four
+ */
+
+/** Extra for experts:
  *  1. Minimax search tree (5 recursive functions -- computerAIMove, multiMin, multiMax, oneMin and oneMax)
  *     oneMin and oneMax is leaf node
  *     a function endswith min goes to max to find value up until the leaf
@@ -11,8 +17,6 @@
  * 
  *  3. choose a random sound to play, and user has to do something for the sound to play
  *  I finally got sounds working lmao, but I still don't know where the error was. I rewrote my code ans somehow it worked
- * 
- * 
  */
 
 
